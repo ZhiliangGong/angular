@@ -378,8 +378,11 @@ export class DefaultUrlSerializer implements UrlSerializer {
   }
 
   /** Converts a `UrlTree` into a url */
-  serialize(tree: UrlTree): string {
-    const segment = `/${serializeSegment(tree.root, true)}`;
+  serialize(tree: UrlTree, forceTrailingSlash = false): string {
+    let segment = `/${serializeSegment(tree.root, true)}`;
+    if (forceTrailingSlash && !segment.endsWith('/')) {
+      segment += '/';
+    }
     const query = serializeQueryParams(tree.queryParams);
     const fragment =
         typeof tree.fragment === `string` ? `#${encodeUriFragment(tree.fragment)}` : '';
